@@ -1,0 +1,85 @@
+<div class="pollution-container">
+  <h2>Liste des pollutions</h2>
+
+  @if (selectedPollutionId === null && isCreating === false) {
+    <div class="pollution-list">
+      <div class="search-container">
+        <form class="filter-form">
+          <div class="form-group">
+            <label for="titreSearch">Rechercher par titre:</label>
+            <input 
+              type="text"
+              id="titreSearch"
+              [(ngModel)]="titreSearch"
+              name="titreSearch"
+              placeholder="Entrez le titre"
+              class="search-input"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="typePollutionSearch">Filtrer par type:</label>
+            <select
+              id="typePollutionSearch"
+              [(ngModel)]="typePollutionSearch"
+              name="typePollutionSearch"
+              class="search-select"
+            >
+              <option value="">Tous les types</option>
+              @for (type of availableTypes; track type) {
+                <option [value]="type">
+                  {{ type }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="form-buttons">
+            <button type="button" (click)="filterPollutions()" class="filter-btn">
+              Filtrer
+            </button>
+            <button type="button" (click)="clearFilters()" class="clear-btn">
+              Effacer
+            </button>
+          </div>
+        </form>
+      </div>
+
+
+
+      <div class="create-pollution-section">        
+        <button (click)="startCreating()" class="details-btn">Ajouter une pollution</button>
+      </div>
+
+      <ul>
+        @for (pollution of pollutions$ | async; track pollution.id) {
+          <li>
+            <strong>{{ pollution.titre }}:</strong>
+            <img
+              [src]="pollution.photo_url"
+              alt="Photo de la pollution"
+              class="pollution-photo"
+            />
+            <div class="action-buttons">
+              <button (click)="showDetails(pollution.id)" class="details-btn">Voir détails</button>
+              <button (click)="deletePollution(pollution.id)" class="delete-btn">Delete</button>
+              <button (click)="editPollution(pollution.id)" class="edit-btn">Edit</button>
+            </div>
+          </li>
+        }
+      </ul>
+    </div>
+  } @else if(selectedPollutionId !== null) {
+    <div class="details-section">
+      <div class="details-header">
+        <h3>Détails de la pollution</h3>
+        <button (click)="hideDetails()" class="close-btn">← Retour à la liste</button>
+      </div>
+      <app-pollution-details [pollutionId]="selectedPollutionId!"></app-pollution-details>
+    </div>
+  } @else if (isCreating) {
+    <div class="create-section">      
+      <app-pollution-create-form (pollutionCreated)="onPollutionCreated($event)"></app-pollution-create-form>
+    </div>
+  }
+</div>

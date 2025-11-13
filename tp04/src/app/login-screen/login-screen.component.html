@@ -1,0 +1,65 @@
+<div>
+  <div *ngIf="!showSignUp">
+    <h2>Login</h2>
+    <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+      <label for="login">Login:</label>
+      <input
+        type="text"
+        id="login"
+        formControlName="login"
+        required
+      />
+
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        id="password"
+        formControlName="pass"
+        required
+      />
+
+      <button type="submit" [disabled]="loginForm.invalid">Login</button>
+      <button type="button" (click)="toggleForm()">Create Account</button>
+    </form>
+  </div>
+
+  <div *ngIf="showSignUp">
+    <h2>Create Account</h2>
+    <form (ngSubmit)="onSignUp()" [formGroup]="signUpForm">
+      <label for="signup-nom">Last Name (Nom):</label>
+      <input
+        type="text"
+        id="signup-nom"
+        formControlName="nom"
+        required
+      />
+
+      <label for="signup-prenom">First Name (Prénom):</label>
+      <input
+        type="text"
+        id="signup-prenom"
+        formControlName="prenom"
+        required
+      />
+
+      <label for="signup-login">Login:</label>
+      <input
+        type="text"
+        id="signup-login"
+        formControlName="login"
+        required
+      />
+
+      <label for="signup-password">Password:</label>
+      <input
+        type="password"
+        id="signup-password"
+        formControlName="pass"
+        required
+      />
+
+      <button type="submit" [disabled]="signUpForm.invalid">Sign Up</button>
+      <button type="button" (click)="toggleForm()">Back to Login</button>
+    </form>
+  </div>
+</div>

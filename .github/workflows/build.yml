@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - api
+      - main
   pull_request:
     branches:
       - api
+      - main
 
 env:
   REGISTRY: ghcr.io
@@ -54,7 +56,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: ${{ github.ref == 'refs/heads/api' }}
+          # push the image when building from the api or main branches
+          push: ${{ github.ref == 'refs/heads/api' || github.ref == 'refs/heads/main' }}
           platforms: linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -62,8 +65,10 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Deploy on render.com
-        if: github.ref == 'refs/heads/api'
+        if: github.ref == 'refs/heads/api' || github.ref == 'refs/heads/main'
         env:
           deploy_url: ${{ secrets.API }}
         run: |
+          # The repository previously used a Render deploy hook stored in the secret named 'API'.
+          # Ensure you have set that secret to your Render (or other host) deploy URL.
           curl -X POST "$deploy_url"
